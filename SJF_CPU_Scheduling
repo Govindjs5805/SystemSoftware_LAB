@@ -1,0 +1,57 @@
+#include<stdio.h>
+int main(){
+int n,i,j;
+ printf("Enter the number of processes\n");
+ scanf("%d",&n);
+ 
+int at[n],bt[n],ct[n],tat[n],wt[n],is_completed[n];
+float avg_tat=0,avg_wt=0;
+
+printf("Enter the arrival time for each processes\n");
+for(i=0;i<n;i++){
+ printf("Process %d:",i+1);
+ scanf("%d",&at[i]);
+}
+for(i=0; i<n; i++) {
+    is_completed[i] = 0;
+}
+
+printf("Enter the burst time for each processes\n");
+for(i=0;i<n;i++){
+ printf("Process %d:",i+1);
+ scanf("%d",&bt[i]);
+}
+int completed=0,current_time=0;
+while(completed<n){
+ int idx=-1;
+ int min_burst=999;
+
+ for(i=0;i<n;i++){
+ if(!is_completed[i]&&at[i]<=current_time && bt[i]<min_burst){
+   min_burst=bt[i];
+   idx=i;
+}}
+   if(idx!=-1){
+   current_time+=bt[idx];
+   ct[idx]=current_time;
+   tat[idx]=ct[idx]-at[idx];
+   wt[idx]=tat[idx]-bt[idx];  
+  avg_tat+=tat[idx];
+  avg_wt+=wt[idx];
+  is_completed[idx]=1;
+  completed++;
+   
+}
+else{
+ current_time++;
+}
+}
+printf("Process\t\tArrival time\t\tBurst time\t\tCompletion time\t\tTurnaround time\t\tWaiting time\n");
+for(i=0;i<n;i++){
+ printf("%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n",i+1,at[i],bt[i],ct[i],tat[i],wt[i]);
+
+}
+printf("Average Turnaround time : %.2f\n",avg_tat/n);
+printf("Average waiting time : %.2f\n",avg_wt/n);
+return 0;
+}
