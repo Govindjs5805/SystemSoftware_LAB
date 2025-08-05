@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+typedef struct {
+    int page_number;
+    int valid;
+    int frequency;
+    int last_used_time;
+} PageFrame;
+
+int main() {
+  int i, j;
+  int num_pages;
+  int num_frames;
+  int hits = 0;
+  int faults = 0;
+  int time = 0;
+
+  printf("Enter the number of pages: ");
+  scanf("%d", &num_pages);
+
+  printf("Enter the number of frames: ");
+  scanf("%d", &num_frames);
+
+PageFrame *frames = (PageFrame *)malloc(num_frames * sizeof(PageFrame));
+ if (frames == NULL) {
+        perror("Memory Allocation Failed\n");
+        exit(EXIT_FAILURE);
+    }
+ for (i = 0; i < num_frames; i++) {
+    frames[i].valid = 0;
+    frames[i].page_number = -1;
+    frames[i].frequency = 0;
+    frames[i].last_used_time = -1;
+    }
+
+int *pages = (int *)malloc(num_pages * sizeof(int));
+ if (pages == NULL) {
+    perror("Memory Allocation Failed\n");
+    free(frames);
+    exit(EXIT_FAILURE);
+}
+
+ printf("Enter the Page Reference string: ");
+ for (i = 0; i < num_pages; i++) {
+     scanf("%d", &pages[i]);
+}
+for (i = 0; i < num_pages; i++) {
+   int page = pages[i];
+   int hit = 0;
+   time++;
+ 
+ for (j = 0; j < num_frames; j++) {
+       if (frames[j].valid && frames[j].page_number == page) {
+           hit = 1;
+      frames[j].frequency++;
+      frames[j].last_used_time = time;
+      break;
+  }
+ }
+   if (hit) {
+        hits++;
+ } else {
+    faults++;
+    int lfu_index = 0;
+    int min_frequency = INT_MAX;
+    int oldest_time = INT_MAX;
+    for (j = 0; j < num_frames; j++) {
+         if (!frames[j].valid) {
+            lfu_index = j;
+            break;
+}
+
+    if (frames[j].frequency < min_frequency) {
+        min_frequency = frames[j].frequency;
+        oldest_time = frames[j].last_used_time;
+        lfu_index = j;
+} else if (frames[j].frequency == min_frequency && 
+      frames[j].last_used_time < oldest_time) {
+      oldest_time = frames[j].last_used_time;
+      lfu_index = j;
+  }
+}
+   frames[lfu_index].page_number = page;
+   frames[lfu_index].valid = 1;
+   frames[lfu_index].frequency = 1;
+   frames[lfu_index].last_used_time = time;
+  }
+}
+ printf("\n");
+ printf("Total Page Hits = %d\n", hits);
+ printf("Total Page Faults = %d\n", faults);
+ printf("Hit Ratio = %.2f\n",(float)hits/num_pages);
+ printf("Miss Ratio = %.2f\n",(float)faults/num_pages);
+free(frames);
+free(pages);
+return 0;
+}
