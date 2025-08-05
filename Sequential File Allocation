@@ -1,0 +1,49 @@
+#include<stdio.h>
+#include<string.h>
+
+struct file{
+ char name[20];
+ int sb;
+ int nb;
+}f[30];
+
+int allocated_blocks[100]={0};
+char allocated_files[100][20]={{0}};
+int main(){
+ int n,i,j;
+ 
+ printf("Enter the number of files\n");
+ scanf("%d",&n);
+
+ for(i=0;i<n;i++){
+ printf("Enter file name %d: ",i+1);
+ scanf("%s",f[i].name);
+   
+   printf("Enter the starting block: ");
+   scanf("%d",&f[i].sb);
+
+  printf("Enter the number of blocks: ");
+  scanf("%d",&f[i].nb);
+  
+  for(j=0;j<f[i].nb;j++){
+    if(allocated_blocks[f[i].sb+j]==1){
+    printf("Block %d is already allocated to %s\n",f[i].sb+j, allocated_files[f[i].sb+j]);
+    i--;
+    break;
+    }
+}
+for(j=0;j<f[i].nb;j++){
+ allocated_blocks[f[i].sb+j]=1;
+ strcpy(allocated_files[f[i].sb+j],f[i].name);
+}
+}
+printf("\nFILE NAME\tSTARTING BLOCK\tNUMBER OF BLOCKS\tBLOCKS ALLOCATED\n");
+for(i=0;i<n;i++){
+ printf("\n%s\t\t%d\t\t%d\t\t",f[i].name,f[i].sb,f[i].nb);
+ for(j=0;j<f[i].nb;j++){
+  printf("%d, ",f[i].sb+j);
+
+}}
+printf("\n");
+return 0;
+}
