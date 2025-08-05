@@ -1,0 +1,49 @@
+#include<stdio.h>
+#define MAX_FRAMES 20
+#define MAX_PAGES 200
+int main(){
+ int i,j=0;
+ int num_pages,num_frames;
+ int frames[MAX_FRAMES];
+ int pages[MAX_PAGES];
+ int fifo=0;
+ int faults=0;
+ int hits=0;
+
+ printf("Enter the number of pages : ");
+ scanf("%d",&num_pages);
+ 
+ printf("Enter the number of frames : ");
+ scanf("%d",&num_frames);
+ 
+ printf("Enter the page reference string : ");
+ for(i=0;i<num_pages;i++){
+  scanf("%d",&pages[i]);
+}
+for(i=0;i<num_frames;i++){
+ frames[i]=-1;
+}
+for(i=0;i<num_pages;i++){
+ int page=pages[i];
+ int hit=0;
+  for(j=0;j<num_frames;j++){
+   if(frames[j]==page){
+     hit=1;
+     break;
+}
+}
+if(hit){
+ hits++;
+}else{
+ faults++;
+ frames[fifo]=page;
+ fifo=(fifo+1)%num_frames;
+}
+}
+printf("\n");
+printf("Total Page Hits = %d\n",hits);
+printf("Total Page Faults = %d\n",faults);
+printf("Hit Ratio = %.2f\n",(float)hits/num_pages);
+printf("Miss Ratio = %.2f\n",(float)faults/num_pages);
+return 0;
+}
