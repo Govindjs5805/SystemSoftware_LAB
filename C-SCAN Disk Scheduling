@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n, i, j, head, direction, disk_size;
+
+    printf("Enter number of disk requests: ");
+    scanf("%d", &n);
+
+    int req[n + 1];
+
+    printf("Enter the disk requests (in cylinder numbers):\n");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &req[i]);
+    }
+
+    printf("Enter initial head position: ");
+    scanf("%d", &head);
+
+    printf("Enter total number of cylinders (e.g., 200 if 0–199): ");
+    scanf("%d", &disk_size);
+
+    printf("Enter direction (0 for left, 1 for right): ");
+    scanf("%d", &direction);
+
+    req[n] = head;
+    n++;
+
+    for (i = 0; i < n - 1; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (req[i] > req[j]) {
+                int temp = req[i];
+                req[i] = req[j];
+                req[j] = temp;
+            }
+        }
+    }
+
+    int pos;
+    for (i = 0; i < n; i++) {
+        if (req[i] == head) {
+            pos = i;
+            break;
+        }
+    }
+
+    int total_movement = 0;
+    printf("\nSeek Sequence:\n");
+
+    if (direction == 1) {
+ 
+        for (i = pos; i < n; i++) {
+            printf("%d ", req[i]);
+            if (i != pos)
+                total_movement += abs(req[i] - req[i - 1]);
+        }
+
+        if (req[n - 1] != disk_size - 1)
+            total_movement += (disk_size - 1 - req[n - 1]);
+
+        total_movement += (disk_size - 1);
+
+        for (i = 0; i < pos; i++) {
+            printf("%d ", req[i]);
+            if (i == 0)
+                total_movement += req[i];
+            else
+                total_movement += abs(req[i] - req[i - 1]);
+        }
+
+    } else {
+
+        for (i = pos; i >= 0; i--) {
+            printf("%d ", req[i]);
+            if (i != pos)
+                total_movement += abs(req[i] - req[i + 1]);
+        }
+
+        if (req[0] != 0)
+            total_movement += req[0];
+
+        total_movement += (disk_size - 1);
+
+        for (i = n - 1; i > pos; i--) {
+            printf("%d ", req[i]);
+            if (i == n - 1)
+                total_movement += (disk_size - 1 - req[i]);
+            else
+                total_movement += abs(req[i] - req[i + 1]);
+        }
+    }
+
+    printf("\nTotal head movement = %d\n", total_movement);
+
+    return 0;
+}
+
