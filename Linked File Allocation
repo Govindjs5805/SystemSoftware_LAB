@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct block {
+    int bno;
+    struct block* next;
+};
+struct file {
+    char name[20];
+    int nob;
+    struct block* start;
+};
+int main() {
+    struct file f[10];
+    int n, i, j, block_no;
+
+    printf("Enter the number of files: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("\nEnter file name %d: ", i + 1);
+        scanf("%s", f[i].name);
+
+        printf("Enter number of blocks in file %d: ", i + 1);
+        scanf("%d", &f[i].nob);
+
+        f[i].start = NULL;
+        struct block* temp = NULL;
+        struct block* last = NULL;
+
+        printf("Enter the block numbers:\n");
+        for (j = 0; j < f[i].nob; j++) {
+            scanf("%d", &block_no);
+
+            temp = (struct block*)malloc(sizeof(struct block));
+            temp->bno = block_no;
+            temp->next = NULL;
+
+            if (f[i].start == NULL)
+                f[i].start = temp;
+            else
+                last->next = temp;
+
+            last = temp;
+        }
+    }
+    printf("\n%s\t\t%s\t\t%s\n", "FILE NAME","NUMBER OF BLOCKS", "BLOCKS OCCUPIED");
+    for (i = 0; i < n; i++) {
+        printf("%-15s\t\t%d ", f[i].name,f[i].nob);
+        printf("\t\t");
+        struct block* temp = f[i].start;
+        while (temp != NULL) {
+            printf("%d", temp->bno);
+            temp = temp->next;
+            if (temp != NULL)
+
+                printf(" -> ");
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
