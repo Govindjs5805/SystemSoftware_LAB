@@ -1,0 +1,28 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(){
+    int n,head,i,prev,curr,totalmov=0;
+    float avgmov=0;
+    printf("Enter the number of disk requests\n");
+    scanf("%d",&n);
+    int request[n];
+    
+    printf("Enter the initial head position\n");
+    scanf("%d",&head);
+    
+    printf("Enter the disk request sequence\n");
+    for(i=0;i<n;i++){
+        scanf("%d",&request[i]);
+    }
+    prev=head;
+    for(i=0;i<n;i++){
+        curr=request[i];
+        totalmov+=abs(curr-prev);
+        prev=curr;
+    }
+    avgmov=(float)totalmov/n;
+    printf("Total head movement : %d\n",totalmov);
+    printf("Average head movement : %.2f\n",avgmov);
+    
+}
